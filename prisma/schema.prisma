@@ -17,3 +17,45 @@ model Chat{
   title String 
   createdAt DateTime @default(now())
 }
+
+model Painting {
+  id        Int        @id @default(autoincrement())
+  title     String
+  style     String     // e.g. Abstract, Cyberpunk, Minimalist, Impressionist
+  price     Int
+  createdAt DateTime   @default(now())
+  orders    Order[]
+  reactions Reaction[]
+}
+
+model Customer {
+  id        Int        @id @default(autoincrement())
+  name      String
+  city      String     // e.g. Mumbai, Delhi, Bengaluru, Jaipur, Pune
+  createdAt DateTime   @default(now())
+  orders    Order[]
+  reactions Reaction[]
+}
+
+model Order {
+  id          Int      @id @default(autoincrement())
+  paintingId  Int
+  customerId  Int
+  quantity    Int
+  totalAmount Int
+  createdAt   DateTime @default(now())
+
+  painting Painting @relation(fields: [paintingId], references: [id])
+  customer Customer @relation(fields: [customerId], references: [id])
+}
+
+model Reaction {
+  id         Int      @id @default(autoincrement())
+  paintingId Int
+  customerId Int
+  type       String   // e.g. "like", "love", "fire"
+  createdAt  DateTime @default(now())
+
+  painting Painting @relation(fields: [paintingId], references: [id])
+  customer Customer @relation(fields: [customerId], references: [id])
+}
